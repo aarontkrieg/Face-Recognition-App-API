@@ -1,4 +1,4 @@
-const express = require('express')
+const express = require('express');
 
 const app = express();
 
@@ -6,12 +6,28 @@ app.use(express.json());
 
 const database = {
 	users: [
-
+		{
+			id: '123',
+			name: 'John',
+			email: 'john@gmail.com',
+			password: 'cookies',
+			entries: 0,
+			joined: new Date()
+		},
+		{
+			id: '124',
+			name: 'Sally',
+			email: 'Sally@gmail.com',
+			password: 'bananas',
+			entries: 0,
+			joined: new Date()
+		}
 	]
+
 }
 
 app.get('/', (req, res) => {
-	res.send('this is working');
+	res.send(database.users);
 })
 
 app.post('/signin', (req, res) => {
@@ -22,6 +38,19 @@ app.post('/signin', (req, res) => {
 	} else {
 		res.status(400).json('error logging in');
 	}
+})
+
+app.post('/register', (req, res) => {
+	const { email, name, password} = req.body;
+	database.users.push({
+			id: '125',
+			name: name,
+			email: email,
+			password: password,
+			entries: 0,
+			joined: new Date()
+	})
+	res.json(database.users[database.users.length-1])
 })
 
 app.listen(3000, ()=> {
@@ -35,6 +64,7 @@ app.listen(3000, ()=> {
 /signin --> POST success/fail
 /regiester --> POST = 
 /profile/:userId --> GET = user
+/image --> PUT --> user
 
 
 */
