@@ -1,8 +1,23 @@
 const express = require('express');
-
+const bcrypt = require('bcrypt-nodejs');
 const app = express();
+const cors = require('cors');
+const knex = require('knex')
+
+const postgres = knex({
+  client: 'pg',
+  connection: {
+    host : '127.0.0.1',
+    user : 'AaronKrieg',
+    password : '',
+    database : 'smart-brain'
+  }
+});
+
+console.log(postgres.select('*').from('users'));
 
 app.use(express.json());
+app.use(cors());
 
 const database = {
 	users: [
@@ -22,6 +37,13 @@ const database = {
 			entries: 0,
 			joined: new Date()
 		}
+	],
+	login: [
+	{
+		id: '987',
+		has: '',
+		email: 'john@gmail.com'
+	}
 	]
 
 }
@@ -34,7 +56,7 @@ app.post('/signin', (req, res) => {
 
 	if ((req.body.email) === database.users[0].email &&
 		req.body.password === database.users[0].password) {
-		res.json('success');
+		res.json(database.users[0]);
 	} else {
 		res.status(400).json('error logging in');
 	}
@@ -56,6 +78,9 @@ app.get('/profile/:id', (req, res) => {
 
 app.post('/register', (req, res) => {
 	const { email, name, password} = req.body;
+	bcrypt.hash(password, null, null, function(err, hash) {
+		console.log(hash);
+	});
 	database.users.push({
 			id: '125',
 			name: name,
@@ -67,7 +92,7 @@ app.post('/register', (req, res) => {
 	res.json(database.users[database.users.length-1])
 })
 
-app.post('/image', (req, res) => {
+app.put('/image', (req, res) => {
 	const { id } = req.body;
 	let found = false;
 	database.users.forEach(user => {
