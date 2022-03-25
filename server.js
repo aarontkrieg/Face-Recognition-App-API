@@ -21,34 +21,34 @@ db.select('*').from('users').then(data => {
 app.use(express.json());
 app.use(cors());
 
-const database = {
-	users: [
-		{
-			id: '123',
-			name: 'John',
-			email: 'john@gmail.com',
-			password: 'cookies',
-			entries: 0,
-			joined: new Date()
-		},
-		{
-			id: '124',
-			name: 'Sally',
-			email: 'Sally@gmail.com',
-			password: 'bananas',
-			entries: 0,
-			joined: new Date()
-		}
-	],
-	login: [
-	{
-		id: '987',
-		has: '',
-		email: 'john@gmail.com'
-	}
-	]
+// const database = {
+// 	users: [
+// 		{
+// 			id: '123',
+// 			name: 'John',
+// 			email: 'john@gmail.com',
+// 			password: 'cookies',
+// 			entries: 0,
+// 			joined: new Date()
+// 		},
+// 		{
+// 			id: '124',
+// 			name: 'Sally',
+// 			email: 'Sally@gmail.com',
+// 			password: 'bananas',
+// 			entries: 0,
+// 			joined: new Date()
+// 		}
+// 	],
+// 	login: [
+// 	{
+// 		id: '987',
+// 		has: '',
+// 		email: 'john@gmail.com'
+// 	}
+// 	]
 
-}
+// }
 
 app.get('/', (req, res) => {
 	res.send(database.users);
@@ -80,12 +80,17 @@ app.get('/profile/:id', (req, res) => {
 
 app.post('/register', (req, res) => {
 	const { email, name, password} = req.body;
-	db('users').insert({
+	db('users')
+	.returning('*')
+	.insert({
 		email: email,
 		name: name,
 		joined: new Date()
-	}).then(console.log)
-	res.json(database.users[database.users.length-1])
+	})
+	.then(user => {
+		res.json(user[0])
+	})
+	.catch(err => res.status(400).json('unable to regiester'))
 })
 
 app.put('/image', (req, res) => {
