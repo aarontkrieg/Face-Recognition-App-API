@@ -27,46 +27,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// const database = {
-// 	users: [
-// 		{
-// 			id: '123',
-// 			name: 'John',
-// 			email: 'john@gmail.com',
-// 			password: 'cookies',
-// 			entries: 0,
-// 			joined: new Date()
-// 		},
-// 		{
-// 			id: '124',
-// 			name: 'Sally',
-// 			email: 'Sally@gmail.com',
-// 			password: 'bananas',
-// 			entries: 0,
-// 			joined: new Date()
-// 		}
-// 	],
-// 	login: [
-// 	{
-// 		id: '987',
-// 		has: '',
-// 		email: 'john@gmail.com'
-// 	}
-// 	]
 
-// }
-
-app.get('/', (req, res) => {
-	res.send('success')
-})
-
+app.get('/', (req, res) => {res.send('success')})
 app.post('/signin', (req, res) => {signin.handleSignin(req, res, db, bcrypt)} )
-
 app.get('/profile/:id', (req, res) => { profile.handleProfileGet(req, res, db) })
-
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) })
-
 app.put('/image', (req, res) => { image.handleImage(req, res, db) })
+app.post('/imageurl', (req, res) => { image.handleApiCall(req, res) })
 
 app.listen(3000, ()=> {
 	console.log('app is running on port 3000');
